@@ -8,7 +8,7 @@ ETH_BASE={
 	'size':1,
 	'sizeAccleration':1,
 	'stepsize':10,#Min 6!!!
-	'accleration':10,
+	'accleration':0,
 	'count':5,
 	'delta':10,
 	'roundoff':0
@@ -25,13 +25,14 @@ BTC_BASE={
 	'size':1,
 	'sizeAccleration':1,
 	'stepsize':300,
-	'accleration':5,
+	'accleration':0,
 	'count':6,
 	'delta':300,
  	'roundoff':0
  	}
  	
  	
+
 BTC_LONG={'direction':'long',	**BTC_BASE}
 BTC_SHORT={'direction':'short',	**BTC_BASE}
 # 
@@ -53,10 +54,17 @@ def mode_switcher():
 
 def order(orderConfig):
 	global mode
-	if inputStepSize.get()!='default':
-		orderConfig.update({'stepsize':inputStepSize.get()})
-	if inputDelta.get()!='default':
-		orderConfig.update({'delta':inputDelta.get()})
+	if input_stepsize.get()!='default':
+		orderConfig.update({'stepsize':input_stepsize.get()})
+
+	if input_delta.get()!='default':
+		orderConfig.update({'delta':input_delta.get()})
+
+	if input_sizeAccleration.get()!='default':
+		orderConfig.update({'sizeAccleration':input_sizeAccleration.get()})
+
+	if input_count.get()!='default':
+		orderConfig.update({'count':input_count.get()})
 
 	orders_exec(gen_orders(**orderConfig),mode=mode)
 
@@ -69,28 +77,44 @@ if __name__ == '__main__':
 	# root.grid_columnconfigure(0,weight=1)
 	root.maxsize(800,600)
 	root.iconbitmap('./images/binance-icon.ico')
-	warnings='''Think Twice before putting orders, if market is up:sell::down:buy NEVER exceed hedge ratio 1.5 your enemy is fear of loss and greed for gains'''
+	warnings='\n-'.join([
+	'- triple streak rule, place order if 3 greens/reds in a row',
+	'NEVER exceed hedge ratio 10%',
+	'your enemy is fear of loss and greed for gains'])
 
 	warningBox = Label (root,text=warnings,justify='left',wraplength='400')
 	warningBox.grid(row=0,columnspan=2,sticky='w')
 
+	#______________________________________________
 	frame1 = Frame(root, background="#000")
 	frame1.grid(row=1, columnspan=2,sticky='ew',pady=(0))
 
-	modebtn = Button(root,command=lambda : mode_switcher(), text='MODE :: '+mode ,fg="white", bg="BLUE",)
-	modebtn.grid(row=5,column=0,sticky='w')
+	labelSetup={'bg':'#000','fg':'#fff','justify':tk.LEFT,'anchor':"w"}
 
-	labelSetup={'bg':'#000','fg':'#fff'}
+	label_stepsize=Label(frame1,text="stepsize",**labelSetup)
+	default_stepsize=StringVar(root,ETH_BASE['stepsize'])
+	input_stepsize= Spinbox(frame1,from_=1,to=20,textvariable=default_stepsize)
+	label_stepsize.grid(row=0,column=0,sticky='w')
+	input_stepsize.grid(row=0,column=1,)
 
-	labelStepSize=Label(frame1,text="stepsize",**labelSetup)
-	labelStepSize.pack(side='left',padx=(1,0))
-	inputStepSize= Spinbox(frame1,from_=4,to=20,textvariable='')
-	inputStepSize.pack(side='left')
+	label_delta=Label(frame1,text="delta",**labelSetup)
+	default_delta=StringVar(root,ETH_BASE['delta'])
+	input_delta= Spinbox(frame1,from_=1,to=20,textvariable= default_delta )
+	label_delta.grid(row=0,column=2,sticky='w')
+	input_delta.grid(row=0,column=3)
 
-	labelDelta=Label(frame1,text="delta",**labelSetup)
-	labelDelta.pack(side='left',padx=(2,0))
-	inputDelta= Spinbox(frame1,from_=4,to=20,textvariable='')
-	inputDelta.pack(side='left')
+	label_sizeAccleration=Label(frame1,text="sizeAccl",**labelSetup)
+	default_sizeAccleration=StringVar(root,ETH_BASE['sizeAccleration'])
+	input_sizeAccleration= Spinbox(frame1,from_=0,to=2,textvariable=default_sizeAccleration)
+	label_sizeAccleration.grid(row=1,column=0,sticky='w')
+	input_sizeAccleration.grid(row=1,column=1)
+
+	labelcount=Label(frame1,text="count",**labelSetup)
+	default_count=StringVar(root,ETH_BASE['count'])
+	input_count= Spinbox(frame1,from_=1,to=10,textvariable=default_count)
+	labelcount.grid(row=1,column=2,sticky='w')
+	input_count.grid(row=1,column=3)
+	#______________________________________________
 
 
 	w = Button(root,command=lambda:order(BTC_LONG)	,text="BTC LONG▲",	**BTN_LONG_STYLE)
@@ -108,6 +132,8 @@ if __name__ == '__main__':
 	w = Button(root,command=lambda:order(ETH_SHORT)	,text="ETH SHORT▼",	**BTN_SHORT_STYLE)
 	w.grid(row=4,column=1)
 
+	modebtn = Button(root,command=lambda : mode_switcher(), text='MODE :: '+mode ,fg="white", bg="BLUE",)
+	modebtn.grid(row=5,column=0,sticky='w')
 
 	root.mainloop()	
 
