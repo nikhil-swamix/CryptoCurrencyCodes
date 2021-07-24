@@ -69,7 +69,7 @@ def order(orderConfig):
 	orders_exec(gen_orders(**orderConfig),mode=mode)
 
 if __name__ == '__main__':
-	
+
 	lastrow=0 
 	mode='live'
 	root = Tk()

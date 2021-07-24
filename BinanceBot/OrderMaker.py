@@ -21,6 +21,7 @@ def gen_orders(
 	count: 		amount of orders to be generated ,
 	stepPercent: sliding window step ,
 	accleration : accleration in % for step stepsize.,
+	sizeAccleration : sizeAccleration integer for order size,
 	roundoff	: rounds off to nth place
 	mardelRatio : margin to delta ratio
 	trigPrice: 	is slghtly away from mark price in the long/short direction when price reached, 
@@ -37,7 +38,9 @@ def gen_orders(
 
 	delta=round(float(delta),roundoff)
 	stepsize=round(float(stepsize),roundoff)
-	print(delta,stepsize)
+	sizeAccleration=float(sizeAccleration)
+	count=int(count)
+	# print(delta,stepsize)
 
 	adaptiveStep=round(stepsize*(accleration/100),3)
 	orderlist=[]

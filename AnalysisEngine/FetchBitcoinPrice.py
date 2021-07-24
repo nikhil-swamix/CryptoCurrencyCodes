@@ -1,9 +1,10 @@
+import os
+
 import bs4
 import html5lib
 import selenium;import requests
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import os
 import time as t
 
 url='https://bitcointicker.co/'
