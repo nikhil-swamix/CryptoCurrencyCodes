@@ -30,12 +30,9 @@ def calc_trend(INDEX):
 	...
 
 if __name__ == '__main__':
-	
-	mp=fetch_index_details("DOTUSD_PERP")
-	print(mp)
-	for x in range(1000):
-		# calc_trend('DOTUSD_PERP')
-		calc_trend('BTCUSD_PERP')
-		time.sleep(1)
 
+	while True:
+		print (fetch_index_details("ETHUSD_PERP"))
+		time.sleep(1)
 # 'altzone', 'asctime', 'clock', 'ctime', 'daylight', 'get_clock_info', 'gmtime', 'localtime', 'mktime', 'monotonic', 'monotonic_ns', 'perf_counter', 'perf_counter_ns', 'process_time', 'process_time_ns', 'sleep', 'strftime', 'strptime', 'struct_time', 'thread_time', 'thread_time_ns', 'time', 'time_ns', 'timezone', 'tzname'
+
